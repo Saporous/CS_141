@@ -1,4 +1,4 @@
-#import sys
+import sys
 import math
 
 class Point:
@@ -18,7 +18,7 @@ def printPoint():
 
 def parse():
     # open file
-    with open('input.txt', 'r') as file:
+    with open(str(sys.argv[1]), 'r') as file:
         temp = file.read()
         file.close()
 

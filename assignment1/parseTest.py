@@ -5,22 +5,31 @@ class Point:
     def __init__(self):
         x = 0
         y = 0
-    def __init__(self, X, Y):
-        x = X
-        y = Y
-
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+    def __str__(self):
+        return "%s, %s" % (self.x, self.y)
 def distance(a, b):
     return sqrt(pow(a.x-b.x,2)+pow(a.y-b.y,2))
+
+def printPoint():
+    print('X: ' + self.x + ' Y: ' + self.y)
 
 def parse():
     # open file
     with open('input.txt', 'r') as file:
-        # read in all data
-        print(file.readline())
-    file.close()
+        temp = file.read()
+        file.close()
 
-n = 0
+    # convert string into a list
+    temp = temp.split()
+    i = 0
+    # convert coordinates into points
+    while i < len(temp):
+        pointArr.append(Point(temp[i], temp[i+1]))
+        i += 2
+
 pointArr = []
 parse()
-s = 'The first line is: ' #+ str(pointArr[0].x)
-print(s)
+print(pointArr[0])

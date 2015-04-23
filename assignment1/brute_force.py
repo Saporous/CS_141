@@ -1,5 +1,6 @@
 import sys
 import math
+import time
 
 class Point:
     def __init__(self):
@@ -53,7 +54,9 @@ def brute_force(arr):
 pointArr = parse()
 print('done parsing\n')
 print('there are %s points to compare' % (len(pointArr)))
+start = time.time()
 shortestDistance = brute_force(pointArr)
+print(time.time()-start)
 print(shortestDistance)
 
 #print(pointArr[0])

@@ -6,12 +6,11 @@ import time
 graphRE=re.compile("(\\d+)\\s(\\d+)")
 edgeRE=re.compile("(\\d+)\\s(\\d+)\\s(\\d+)")
 
+INFINITE = 100000
+
 def BellmanFord(G):
     pathPairs=[]
-    d = [float("inf")]*(len(G[0]))
-
-    for i in range(0, len(G[0])-1):
-        d[i] = 0
+    d = []
     #print(G[0])         #list of vertices
     #print(G[1])         #list of all lists of edges
     #print(G[1][1])      #list of edges associated with vertex 1
@@ -24,23 +23,32 @@ def BellmanFord(G):
     # 1 x10 x11 x12
     # 2 x20 x21 x22
     # Where xij is the length of the shortest path between i and j
-    
    
-    for source in range(0, len(G[0])-1):            #iterate through every node
-        d = [float("inf")]*(len(G[0]))              #start a fresh list of infinite edge lengths
+    for source in range(len(G[0])):            #iterate through every node
+        d = [INFINITE]*(len(G[0]))              #start a fresh list of infinite edge lengths
         d[source] = 0                               #the source node has 0 distance to itself    
-        for i in range(0, len(G[0])-1):             #iterate through all vertices
-            for j in range(0, len(G[0])):           #iterate through 
-                if(G[1][i][j] != float("inf")):     #Check that the edge exists
-                    if(d[j] > d[i] + float(G[1][i][j])):     #Check if d[v] > d[u]+d(u,v)
-                        d[j] = d[i] + float(G[1][i][j])    #Relax d[v] if shorter
+        for k in range(1, len(G[0])-1):
+            for i in range(len(G[0])):             #iterate through all vertices
+                for j in range(len(G[0])):           #iterate through 
+                    if(G[1][i][j] < INFINITE):     #Check that the edge exists
+                        if(d[j] > d[i] + int(G[1][i][j])):     #Check if d[v] > d[u]+d(u,v)
+                            d[j] = d[i] + int(G[1][i][j])    #Relax d[v] if shorter
         pathPairs.append(d)                                 #stick the list into pathPairs
         d = []                                              #reset d list
 
     return pathPairs
 
+
 def FloydWarshall(G):
-    pathPairs=[]
+    d = []
+    #d = [[INFINITE]*len(G[0]) for i in range(len(G[0]))]
+
+
+    for i in range(len(G[0])):
+        row = []
+        for j in range(len(G[0])):
+            row.append(INFINITE)
+        d.append(row)
     # Fill in your Floyd-Warshall algorithm here
     # The pathPairs will contain a matrix of path lengths:
     #    0   1   2 
@@ -48,7 +56,21 @@ def FloydWarshall(G):
     # 1 x10 x11 x12
     # 2 x20 x21 x22
     # Where xij is the length of the shortest path between i and j
-    return pathPairs
+
+    for i in range(len(G[0])):                   #iterate by rows
+        for j in range(len(G[0])):             #iterate by columns
+            if i == j:
+                d[i][j] = 0
+            elif int(G[1][i][j]) != INFINITE:
+                d[i][j] = int(G[1][i][j])
+            else:
+                d[i][j] = INFINITE
+    for k in range(len(G[0])):                   #iterate by rows
+        for i in range(len(G[0])):             #iterate by columns
+            for j in range(len(G[0])):
+                if d[i][j] > d[i][k] + d[k][j]:
+                    d[i][j] = d[i][k] + d[k][j]
+    return d
 
 def readFile(filename):
     # File format:
@@ -66,7 +88,7 @@ def readFile(filename):
     for i in range(len(vertices)):
         row=[]
         for j in range(len(vertices)):
-            row.append(float("inf"))
+            row.append(INFINITE)
         edges.append(row)
     for line in inFile.readlines():
         line = line.strip()

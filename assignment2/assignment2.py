@@ -7,10 +7,11 @@ graphRE=re.compile("(\\d+)\\s(\\d+)")
 edgeRE=re.compile("(\\d+)\\s(\\d+)\\s(\\d+)")
 
 def BellmanFord(G):
-    pathPairs=[float("inf")]*(len(G[0])-1)
+    pathPairs=[]
+    d = [float("inf")]*(len(G[0]))
 
     for i in range(0, len(G[0])-1):
-        pathPairs[i][i] = 0
+        d[i] = 0
     #print(G[0])         #list of vertices
     #print(G[1])         #list of all lists of edges
     #print(G[1][1])      #list of edges associated with vertex 1
@@ -25,12 +26,16 @@ def BellmanFord(G):
     # Where xij is the length of the shortest path between i and j
     
    
-    for source in range(0, len(G[0])-1):
-        for i in range(0, len(G[0])-1):
-            for j in range(0, len(G[0])-1):
-                if(G[1][i][j] != float("inf")):                  #Check that the edge exists
-                    if(pathPairs[source][j] > G[1][i][j]):     #Check that the
-                        pathPairs[source][j] = G[1][i][j]
+    for source in range(0, len(G[0])-1):            #iterate through every node
+        d = [float("inf")]*(len(G[0]))              #start a fresh list of infinite edge lengths
+        d[source] = 0                               #the source node has 0 distance to itself    
+        for i in range(0, len(G[0])-1):             #iterate through all vertices
+            for j in range(0, len(G[0])):           #iterate through 
+                if(G[1][i][j] != float("inf")):     #Check that the edge exists
+                    if(d[j] > d[i] + float(G[1][i][j])):     #Check if d[v] > d[u]+d(u,v)
+                        d[j] = d[i] + float(G[1][i][j])    #Relax d[v] if shorter
+        pathPairs.append(d)                                 #stick the list into pathPairs
+        d = []                                              #reset d list
 
     return pathPairs
 

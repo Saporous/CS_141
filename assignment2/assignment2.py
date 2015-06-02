@@ -6,8 +6,6 @@ import time
 graphRE=re.compile("(\\d+)\\s(\\d+)")
 edgeRE=re.compile("(\\d+)\\s(\\d+)\\s(\\d+)")
 
-INFINITE = 100000
-
 def BellmanFord(G):
     pathPairs=[]
     d = []
@@ -25,14 +23,14 @@ def BellmanFord(G):
     # Where xij is the length of the shortest path between i and j
    
     for source in range(len(G[0])):            #iterate through every node
-        d = [INFINITE]*(len(G[0]))              #start a fresh list of infinite edge lengths
+        d = [float("inf")]*(len(G[0]))              #start a fresh list of infinite edge lengths
         d[source] = 0                               #the source node has 0 distance to itself    
         for k in range(1, len(G[0])-1):
             for i in range(len(G[0])):             #iterate through all vertices
                 for j in range(len(G[0])):           #iterate through 
-                    if(G[1][i][j] < INFINITE):     #Check that the edge exists
-                        if(d[j] > d[i] + int(G[1][i][j])):     #Check if d[v] > d[u]+d(u,v)
-                            d[j] = d[i] + int(G[1][i][j])    #Relax d[v] if shorter
+                    if(G[1][i][j] != float("inf")):     #Check that the edge exists
+                        if(d[j] > d[i] + float(G[1][i][j])):     #Check if d[v] > d[u]+d(u,v)
+                            d[j] = d[i] + float(G[1][i][j])    #Relax d[v] if shorter
         pathPairs.append(d)                                 #stick the list into pathPairs
         d = []                                              #reset d list
 
@@ -40,14 +38,15 @@ def BellmanFord(G):
 
 
 def FloydWarshall(G):
+    pathPairs=[]
     d = []
-    #d = [[INFINITE]*len(G[0]) for i in range(len(G[0]))]
+    #d = [[float("inf")]*len(G[0]) for i in range(len(G[0]))]
 
 
     for i in range(len(G[0])):
         row = []
         for j in range(len(G[0])):
-            row.append(INFINITE)
+            row.append(float("inf"))
         d.append(row)
     # Fill in your Floyd-Warshall algorithm here
     # The pathPairs will contain a matrix of path lengths:
@@ -61,10 +60,10 @@ def FloydWarshall(G):
         for j in range(len(G[0])):             #iterate by columns
             if i == j:
                 d[i][j] = 0
-            elif int(G[1][i][j]) != INFINITE:
-                d[i][j] = int(G[1][i][j])
+            elif float(G[1][i][j]) != float("inf"):
+                d[i][j] = float(G[1][i][j])
             else:
-                d[i][j] = INFINITE
+                d[i][j] = float("inf")
     for k in range(len(G[0])):                   #iterate by rows
         for i in range(len(G[0])):             #iterate by columns
             for j in range(len(G[0])):
@@ -88,7 +87,7 @@ def readFile(filename):
     for i in range(len(vertices)):
         row=[]
         for j in range(len(vertices)):
-            row.append(INFINITE)
+            row.append(float("inf"))
         edges.append(row)
     for line in inFile.readlines():
         line = line.strip()
